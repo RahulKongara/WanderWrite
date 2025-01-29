@@ -8,6 +8,9 @@ const Header = () => {
   useEffect(() => {
     fetch('https://wanderwrite-backend.onrender.com/profile', {
       method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
       credentials: 'include',
     }).then(response => {
       if (!response.ok) {
