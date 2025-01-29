@@ -33,7 +33,7 @@ const PostPage = () => {
                 </div>
             )}
             <div className="image">
-                <img src={`http://localhost:4000/${postInfo.cover}`} alt="Single page post image" />
+                <img src={`https://wanderwrite-backend.onrender.com/${postInfo.cover}`} alt="Single page post image" />
             </div>
             <div className='content' dangerouslySetInnerHTML={{__html:postInfo.content}} />
         </div>
