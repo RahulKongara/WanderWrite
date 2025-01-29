@@ -7,8 +7,12 @@ const Header = () => {
   const {setUserInfo, userInfo} = useContext(UserContext);
   useEffect(() => {
     fetch('https://wanderwrite-backend.onrender.com/profile', {
+      method: 'GET',
       credentials: 'include',
     }).then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
       response.json().then(userInfo => {
         setUserInfo(userInfo);
       });
