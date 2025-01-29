@@ -9,7 +9,7 @@ const Register = () => {
     async function register (e) {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:4000/register', {
+            const response = await fetch('https://wanderwrite-backend.onrender.com/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
