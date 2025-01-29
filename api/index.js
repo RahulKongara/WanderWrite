@@ -17,7 +17,22 @@ const PORT = process.env.PORT || 4000;
 const salt = bcrypt.genSaltSync(10);
 const secret = 'awdawdawdasdaw2134tw';
 
-app.use(cors({credentials:true,origin:'https://wanderwrite-frontend.onrender.com'}));
+const allowedOrigins = [
+    "http://localhost:3000",
+    "https://wanderwrite-frontend.onrender.com",
+];
+
+// app.use(cors({credentials:true,origin:'https://wanderwrite-frontend.onrender.com'}));
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials: true
+}));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'))
