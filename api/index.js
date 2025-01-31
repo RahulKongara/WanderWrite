@@ -91,14 +91,70 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get('/profile', (req, res) => {
-    // const { token } = req.cookies;
-    const token = req.headers.authorization?.split(' ')[1];
-    jwt.verify(token, secret, {}, (err,info) => {
-        if (err) throw err;
-        res.json(info);
-    })
-    // res.json(req.cookies);
+// app.get('/profile', (req, res) => {
+//     // const { token } = req.cookies;
+//     const token = req.headers.authorization?.split(' ')[1];
+//     jwt.verify(token, secret, {}, (err,info) => {
+//         if (err) throw err;
+//         res.json(info);
+//     })
+//     // res.json(req.cookies);
+// });
+
+app.get('/profile', async (req, res) => {
+    try {
+      // 1. Get token from headers
+        const authHeader = req.headers.authorization;
+      
+      // 2. Verify authorization header format
+        if (!authHeader?.startsWith('Bearer ')) {
+            return res.status(401).json({ error: 'Unauthorized - Invalid token format' });
+        }
+  
+      // 3. Extract token
+        const token = authHeader.split(' ')[1];
+      
+      // 4. Verify token
+        const decoded = await new Promise((resolve, reject) => {
+            jwt.verify(token, secret, (err, decoded) => {
+                if (err) reject(err);
+                else resolve(decoded);
+            });
+        });
+  
+      // 5. Fetch user from database
+        const user = await User.findById(decoded.userId)
+            .select('-password') // Exclude sensitive fields
+            .lean();
+  
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });;
+        }
+  
+      // 6. Return sanitized user data
+        res.json({
+            id: user._id,
+            username: user.username,
+            email: user.email,
+            createdAt: user.createdAt
+        });
+  
+    } catch (error) {
+        console.error('Profile Error:', error);
+      
+      // Handle specific JWT errors
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ error: 'Invalid token' });
+        }
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ error: 'Token expired' });
+        }
+  
+        res.status(500).json({ 
+            error: 'Internal server error',
+            ...(process.env.NODE_ENV === 'development' && { details: error.message })
+        });
+    }
 });
 
 app.post('/logout', (req, res) => {
