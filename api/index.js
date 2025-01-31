@@ -26,17 +26,29 @@ const allowedOrigins = [
 ];
 
 // app.use(cors({credentials:true,origin:'https://wanderwrite-frontend.onrender.com'}));
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+// app.use(cors({
+//     origin: function (origin, callback) {
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             callback(null, true);
+//         } else {
+//             callback(new Error("Not allowed by CORS"));
+//         }
+//     },
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     credentials: true
+// }));
+const corsOptions = {
+    origin: [
+      'https://wanderwrite-frontend.onrender.com', // Production frontend
+      'http://localhost' // Keep for local development
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
-}));
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // If using cookies/auth headers
+    optionsSuccessStatus: 200 // Legacy browser support
+};
+app.use(cors(corsOptions));
+// app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'))
