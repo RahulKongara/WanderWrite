@@ -41,6 +41,7 @@ const Header = () => {
         <nav>
             {username && (
               <>
+              
                 <Link to="/write">Write</Link>
                 {/* <a onClick={logout}>Log Out</a> */}
                 <Link onClick={logout}>Logout</Link>

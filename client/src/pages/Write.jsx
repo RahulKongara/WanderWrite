@@ -17,7 +17,7 @@ const Write = () => {
         data.set('summary', summary);
         data.set('content', content);
         data.set('file', files[0]);
-        // console.log(files);
+        console.log(files);
         const response = await fetch('https://wanderwrite-backend.onrender.com/post', {
             method: 'POST',
             body: data,
