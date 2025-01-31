@@ -1,0 +1,40 @@
+version: '3.8'  # Docker Compose version
+
+services:
+  frontend:
+    build: ./client
+    ports:
+      - "80:80" 
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend 
+
+  # Backend Service (Node.js)
+  backend:
+    build: ./api  
+    ports:
+      - "4000:4000"  
+    volumes:
+      - ./api:/app 
+      - /app/node_modules  
+    environment:
+      - NODE_ENV=development
+      - secret = awdawdawdasdaw2134tw
+      - db_url = mongodb+srv://admin:ye9fJnSoXrMdZBe5@cluster0.rlj1t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+    depends_on:
+      - mongo  
+
+  # Database Service (MongoDB)
+  mongo:
+    image: mongo:latest  
+    ports:
+      - "27017:27017"  
+    volumes:
+      - mongo-data:/data/db  
+
+volumes:
+  mongo-data:

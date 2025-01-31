@@ -21,6 +21,7 @@ const db_url = process.env.db_url || 'mongodb+srv://admin:ye9fJnSoXrMdZBe5@clust
 
 const allowedOrigins = [
     "http://localhost:3000",
+    "http://localhost:80",
     "https://wanderwrite-frontend.onrender.com",
 ];
 
